@@ -1,10 +1,7 @@
 name: Publish Docker image to AWS ECR
-
 on:
   push:
-    branches:
-      - main
-
+  pull_request:
 jobs:
   push_to_registry:
     name: Push Docker image to ECR

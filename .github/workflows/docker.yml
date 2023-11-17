@@ -26,4 +26,6 @@ jobs:
         run: |
           rev=$(git rev-parse --short HEAD)
           docker tag 2020 244530008913.dkr.ecr.eu-west-1.amazonaws.com/kandidat-2020:$rev
+          docker tag 2020 244530008913.dkr.ecr.eu-west-1.amazonaws.com/kandidat-2020:latest
           docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/kandidat-2020:$rev
+          docker push 244530008913.dkr.ecr.eu-west-1.amazonaws.com/kandidat-2020:latest

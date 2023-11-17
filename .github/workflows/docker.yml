@@ -3,7 +3,6 @@ on:
   push:
   pull_request:
 jobs:
-
   push_to_registry:
     name: Build Docker image
     runs-on: ubuntu-latest

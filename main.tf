@@ -1,5 +1,5 @@
 resource "aws_apprunner_service" "service" {
-  service_name = "var.kandidat"
+  service_name = var.kandidat
 
   instance_configuration {
     instance_role_arn = aws_iam_role.role_for_apprunner_service.arn
@@ -15,7 +15,7 @@ resource "aws_apprunner_service" "service" {
       image_configuration {
         port = "8080"
       }
-      image_identifier      = "var.image"
+      image_identifier      = var.image
       image_repository_type = "ECR"
     }
     auto_deployments_enabled = true

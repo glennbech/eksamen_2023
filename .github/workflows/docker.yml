@@ -5,7 +5,7 @@ on:
       - master
   pull_request:
 jobs:
-  push_to_registry:
+  docker_build:
     name: Push Docker image to ECR
     runs-on: ubuntu-latest
     steps:
@@ -32,7 +32,7 @@ jobs:
   
   terraform:
     name: "Terraform"
-    needs: build_docker_image
+    needs: docker_build
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

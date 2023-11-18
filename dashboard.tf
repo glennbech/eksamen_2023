@@ -13,7 +13,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         "metrics": [
           [
             "${var.kandidat}",
-            "account_count.value"
+            "image_count.value"
           ]
         ],
         "period": 300,

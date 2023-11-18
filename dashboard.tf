@@ -13,13 +13,13 @@ resource "aws_cloudwatch_dashboard" "main" {
         "metrics": [
           [
             "${var.kandidat}",
-            "image_count.value"
+            "violation_count.value"
           ]
         ],
         "period": 300,
         "stat": "Maximum",
         "region": "eu-west-1",
-        "title": "Some thing"
+        "title": "Number of violations"
       }
     }
   ]

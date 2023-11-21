@@ -239,7 +239,23 @@ Ikke en direkte svakhet, men viktig punkt å nevne. Et effektivt DevOps lag er a
 
 #### 3.Sammenligning og Kontrast:
 * ***Sammenlign Scrum/Smidig og DevOps i forhold til deres påvirkning på programvarekvalitet og leveransetempo***
+
+**Programvarekvalitet**
+
+Både SCRUM og DevOps fokuserer på programvarekvalitet, SCRUM går hele prossesen litt saktere en i DevOps, siden man bruker tid på utviklingen, som scrum planning, reviews og daily scrums. I sprint uken er det god tid
+til å burdere eget og andres arbeid som kan være med på å forbedre programvarevaliteten.
+I DevOps er det mye automasjon, så man oppdager feil tidlig, så det er ikke nødvendigvis dårligere kodekvalitet i DevOps, men man bruker kanske ikke like mye tid på det som i Scrum.
+
+**Leveransetempo**
+
+I DevOps er automasjon et kjerneelement, alt fra testing til deploying gjøres ofte automatisk, som øker leveransetempoet. I Scrum har ikke like stort fokus på automasjon, men mer om selve arbeidsprosessen, som kan gjøre at leveransetempoet blir litt saktere enn i devops
+
 * ***Diskuter hvilke aspekter ved hver metodikk som kan være mer fordelaktige i bestemte utviklingssituasjoner***
+
+Begge fokuserer på kvalitet i koden og prossesen runt utviklingen, men jeg føler det er litt "Give and Take" når det kommer til SCRUM og DevOps. DevOps er man avhengig av å lære seg verktøy og rammeverk for 
+å få det meste ut av automasjonen, og dette kan være vanskelig hvis man f.eks alle er helt ny i et utviklings team. Scrum derimot er man kun avhengig av det teoretiske, og kan være lettere for et nytt utviklings lag 
+å sett i gang med.
+Kort forklart DevOps, hvis man har erfaring og jobber godt i lag fra før av. Scrum hvis man ikke har like god kjenskap til hverandre fra før av.
 
 ### Del C Det Andre Prinsippet - Feedback
 * ***Tenk deg at du har implementert en ny funksjonalitet i en applikasjon du jobber med. Beskriv hvordan du vil etablere og bruke teknikker vi har lært fra "feedback" for å sikre at den nye funksjonaliteten møter brukernes behov. Behovene Drøft hvordan feedback bidrar til kontinuerlig forbedring og hvordan de kan integreres i ulike stadier av utviklingslivssyklusen***

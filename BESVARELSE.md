@@ -20,10 +20,12 @@ Bucket:
 
 <br>
 
-* ***For hver push til main branch, skal arbeidsflyten bygge og deploye Lambda-funksjonen***
+* ***Du skal opprette en GitHub Actions-arbeidsflyt for SAM applikasjonen. For hver push til main branch, skal arbeidsflyten bygge og deploye Lambda-funksjonen.***
 * ***Som respons på en push til en annen branch en main, skal applikasjonen kun bygges***
   
 GitHub Action fila ligger [her](.github/workflows/sam-deploy.yml)
+Bucket ble opprettet under navnet kandidat-2020
+
 
 * ***Forklar hva sensor må gjøre for å få GitHub Actions workflow til å kjøre i sin egen GitHub-konto***
 
@@ -58,13 +60,16 @@ Dockerfila ligger [her](Dockerfile)
 
 GitHub Action Workflow fila ligger [her](.github/workflows/docker.yml)
 
+Containerne blir pushet til AWS ECR Repet kandidat-2020
+
 ## Oppgave 3- Terraform, AWS Apprunner og Infrastruktur som kode
 ### Del A
 * ***Fjern hardkodingen av service_name, slik at du kan bruke ditt kandidatnummer eller noe annet som service navn***
 * ***Se etter andre hard-kodede verdier og se om du kan forbedre kodekvaliteten***
 * ***Se på dokumentasjonen til aws_apprunner_service ressursen, og reduser CPU til 256, og Memory til 1024 (defaultverdiene er høyere***
 
-Her la jeg til Kandidat nr om image i  [variables.tf](variables.tf)
+Jeg valgte å la terraform filene min ligge i rot katalogen, slik vi gjorde i Terraform-App-Runner [Labben](https://github.com/glennbechdevops/terraform-app-runner#rydd-opp)
+Her la jeg til Kandidat nr og image i  [variables.tf](variables.tf)
 
 
 ```tf
@@ -78,7 +83,7 @@ variable "image" {
 }
 ```
 
-Fik feil meldinger med memory og cpu, har kommentert ut koden som ikke fungerte for meg
+Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory filer, jeg kar kommentert ut koden i [main.tf](main.tf)
 
 ```tf
   instance_configuration {
@@ -97,9 +102,35 @@ Fik feil meldinger med memory og cpu, har kommentert ut koden som ikke fungerte 
 * ***Du må lege til Terraform provider og backend-konfigurasjon. Dette har Kjell glemt. Du kan bruke samme S3 bucket som vi har brukt til det formålet i øvingene***
 * ***Beskriv også hvilke endringer, om noen, sensor må gjøre i sin fork, GitHub Actions workflow eller kode for å få denne til å kjøre i sin fork***
 
+Oppdatert GitHub workflow for Terraform ligger [her](.github/workflows/docker.yml)
 Terraform provider og backend-konfigurasjon ligger i [provider.tf](provider.tf)
 
+Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
+
 ## Oppgave 4 Feedback
+
+### Del A Utvid applikasjonen og legg inn "Måleinstrumenter"
+
+* ***Nå som dere har en litt større kodebase. Gjør nødvendige endringer i Java-applikasjonen til å bruke Micrometer rammeverket for Metrics, og konfigurer for leveranse av Metrics til CloudWatch***
+  
+* ***Dere kan detetter selv velge hvordan dere implementerer måleinstrumenter i koden.***
+
+Jeg la til Micrometer dependency i pom.xml og opprettet en MetricsConfig fil
+Opprettet Dashboard med navnet candidate-2020
+
+### Del B CloudWatch Alarm og Terraform moduler
+
+Her lagde jeg en mappe som heter alarm_modules
+Jeg lagde SNS notification som trigger på (candidate-2020-alarm-topic) som sender melding hvis over 5 bryter reglene legg til bilde
+
+Tanken var å ha en Gauge som teller violations, hvis den går over et set antall violations skal den sende en main til sjefen av legesenteret/sykehuset
+
+```java
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        // En gauge som henter ut antall "violations"
+    }
+```
 
 ## Oppgave 5 Drøfteoppgave
 ### Del A Kontinuerlig Integrering

@@ -33,9 +33,9 @@ For at sensor skal kjøre workflow fra sin egen fork må sensor lage egne Reposi
 3. Kopier Key og Secret Key
 4. Gå til GitHub Repoet og legg til «New Repository Secrets»
 
-![AWS IAM]()
-![Retrieve Access Keys]()
-![GitHub Repo Secret]()
+![AWS IAM](img/AWS IAM.png)
+![Retrieve Access Keys](img/Retroeve Keys.png)
+![GitHub Repo Secret](img/Secrets.png)
 
 ### Del B
 * ***Lag en Dockerfile som bygger et container image du kan bruke for å kjøre python koden***
@@ -46,7 +46,7 @@ Dockerfilen ligger  [her](kjell/hello_world/Dockerfile)
 ### Del A
 * ***Lag en Dockerfile for Java-appliksjonen. Du skal lage en multi stage Dockerfile som både kompilerer og kjører applikasjonen***
 
-Dockerfila ligger [her](/Dockerfile)
+Dockerfila ligger [her](Dockerfile)
 
 
 ### Del B
@@ -64,8 +64,8 @@ GitHub Action Workflow fila ligger [her](.github/workflows/docker.yml)
 * ***Se etter andre hard-kodede verdier og se om du kan forbedre kodekvaliteten***
 * ***Se på dokumentasjonen til aws_apprunner_service ressursen, og reduser CPU til 256, og Memory til 1024 (defaultverdiene er høyere***
 
-Her la jeg til Kandidat nr i [variables.tf](/variables.tf)
-La til image i [variables.tf](/variables.tf)
+Her la jeg til Kandidat nr om image i  [variables.tf](variables.tf)
+
 
 ```tf
 variable "kandidat" {
@@ -87,8 +87,8 @@ Fik feil meldinger med memory og cpu, har kommentert ut koden som ikke fungerte 
     #memory = "1024"
   }
 ```
-![Memory]()
-![Cpu]()
+![Memory](img/memory.png)
+![Cpu](img/cpu.png)
 
 
 ### Del B
@@ -97,7 +97,7 @@ Fik feil meldinger med memory og cpu, har kommentert ut koden som ikke fungerte 
 * ***Du må lege til Terraform provider og backend-konfigurasjon. Dette har Kjell glemt. Du kan bruke samme S3 bucket som vi har brukt til det formålet i øvingene***
 * ***Beskriv også hvilke endringer, om noen, sensor må gjøre i sin fork, GitHub Actions workflow eller kode for å få denne til å kjøre i sin fork***
 
-Terraform provider og backend-konfigurasjon ligger i [provider.tf](/provider.tf)
+Terraform provider og backend-konfigurasjon ligger i [provider.tf](provider.tf)
 
 ## Oppgave 4 Feedback
 
@@ -109,8 +109,9 @@ Terraform provider og backend-konfigurasjon ligger i [provider.tf](/provider.tf)
 
 Kontinuerlig integrasjon (CI) er en automatisert prosess hvor kodeendringer fra flere utviklere «merges» inn i et sentralt repository/prosjekt. Dette lar utviklere ofte slå sammen kodeendringer til et sentralt repository hvor koden bygges og testes og deretter kjøres. CI er designet for å optimalisere tempoet i programvareleveransen
 
-Et godt eksempel på CI er bilde fra Leksjon 2 «Flow» Slide 19
-![Flow]()
+Et godt eksempel på CI er dette bilde fra Leksjon 2 «Flow» Slide 19
+
+![Flow](img/flow.png)
 
 * ***Fordelene med å bruke CI i et utviklingsprosjekt - hvordan CI kan forbedre kodekvaliteten og effektivisere utviklingsprosessen***
 
@@ -138,9 +139,11 @@ Kjernen i Scrum er «Scrum Sprints». I en sprint, velger utviklerne (eller scru
   * Her tar man en gjennomgang av selve sprint prosessen, og finner ut om det er noe man kan gjøre for å øke kvaliteten og effektiviteten på sprint prosessen.
     Når Sprint retrospective er ferdig, begynner hele prosessen på nytt.
   
-Bildet er hentet fra Wrike.com
-![wrike]()
 
+
+![wrike](img/wrike.png)
+
+Bildet er hentet fra [Wrike](https://www.wrike.com/scrum-guide/scrum-sprints/#what-is-a-scrum-sprint)
 
 * ***Diskuter eventuelle utfordringer og styrker ved å bruke Scrum/Smidig i programvareutviklingsprosjekter***
 
@@ -233,6 +236,10 @@ I DevOps finnes det mange forskjellige rammeverk, og verktøy som kan brukes. Al
 
 Ikke en direkte svakhet, men viktig punkt å nevne. Et effektivt DevOps lag er avhengig av god kommunikasjon. Man er avhengig av peer reviews og å lære av egne og andres feil i lag som er basert på god kommunikasjon. Har man dårlig kommunikasjon i et DevOps lag blir det vanskelig å forbedre seg.
 
+
+#### 3.Sammenligning og Kontrast:
+* ***Sammenlign Scrum/Smidig og DevOps i forhold til deres påvirkning på programvarekvalitet og leveransetempo***
+* ***Diskuter hvilke aspekter ved hver metodikk som kan være mer fordelaktige i bestemte utviklingssituasjoner***
 
 ### Del C Det Andre Prinsippet - Feedback
 * ***Tenk deg at du har implementert en ny funksjonalitet i en applikasjon du jobber med. Beskriv hvordan du vil etablere og bruke teknikker vi har lært fra "feedback" for å sikre at den nye funksjonaliteten møter brukernes behov. Behovene Drøft hvordan feedback bidrar til kontinuerlig forbedring og hvordan de kan integreres i ulike stadier av utviklingslivssyklusen***

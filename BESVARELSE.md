@@ -115,15 +115,11 @@ Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
   
 * ***Dere kan detetter selv velge hvordan dere implementerer måleinstrumenter i koden.***
 
-Jeg la til Micrometer dependency i pom.xml og opprettet en MetricsConfig fil
-Opprettet Dashboard med navnet candidate-2020
+Jeg la til Micrometer dependency i pom.xml og opprettet en MetricsConfig [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
 
-### Del B CloudWatch Alarm og Terraform moduler
+Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, og en metric "Number of violations".
 
-Her lagde jeg en mappe som heter alarm_modules
-Jeg lagde SNS notification som trigger på (candidate-2020-alarm-topic) som sender melding hvis over 5 bryter reglene legg til bilde
-
-Tanken var å ha en Gauge som teller violations, hvis den går over et set antall violations skal den sende en main til sjefen av legesenteret/sykehuset
+Jeg prøvde å lage en gauge som tellte antall violations, men klare ikke få denne til å kjøre riktig. Gaugen skulle telle antall Violations slik at et legesenter/sykehus kunne notifiserers dersom det var over 5 Violations.
 
 ```java
     @Override
@@ -131,6 +127,19 @@ Tanken var å ha en Gauge som teller violations, hvis den går over et set antal
         // En gauge som henter ut antall "violations"
     }
 ```
+
+![CloudWatch Dashboard](img/cloudwatchDashboard.png)
+
+
+### Del B CloudWatch Alarm og Terraform moduler
+
+Jeg opprettet en Cloudwatch [alarm](alarm_module/alarmModule.tf) med SNS subscription , tanken var at når antall violations går over 5 "PPE Violations" er det så alvorlig at vil en alarm bli utløst og PPE ansvarlig vil bli varslet.
+
+SNS topic heter candidate-2020-alarm-topic og SNS topic subscription har id 79bc1ab1-081d-4b42-8797-b033cf84135c
+
+![SNS Topic](img/Candidate%202020%20topic.png)
+
+
 
 ## Oppgave 5 Drøfteoppgave
 ### Del A Kontinuerlig Integrering

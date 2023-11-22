@@ -77,13 +77,13 @@ Containerne blir pushet til AWS ECR Repet kandidat-2020
 * ***Se på dokumentasjonen til aws_apprunner_service ressursen, og reduser CPU til 256, og Memory til 1024 (defaultverdiene er høyere***
 
 Jeg valgte å la terraform filene min ligge i rot katalogen, slik vi gjorde i Terraform-App-Runner [Labben](https://github.com/glennbechdevops/terraform-app-runner#rydd-opp)
+
 Her la jeg til Kandidat nr og image i  [variables.tf](variables.tf)
 
 
 ```tf
 variable "kandidat" {
   type = string
-  #default = "candidate-2020"
 }
 
 variable "image" {
@@ -91,7 +91,7 @@ variable "image" {
 }
 ```
 
-Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory filer, jeg kar kommentert ut koden i [main.tf](main.tf)
+Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden i [main.tf](main.tf)
 
 ```tf
   instance_configuration {
@@ -128,6 +128,7 @@ Jeg la til Micrometer dependency i pom.xml og opprettet en MetricsConfig [Metric
 Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations" og en metric "Number of people checked" .
 
 Jeg prøvde å lage en gauge som tellte antall violations, men klare ikke få denne til å kjøre riktig. Gaugen skulle telle antall violations slik at et legesenter/sykehus kunne notifiserers dersom det var over 5 Violations.
+
 "Meter" skulle telle antallet personer som blir undersøkt for eventuelle "vilations". Sammen med med Gaugen som sjekker antall "Violations" vil Meter gi et bedre innblikk i alvorlighetsgraden. F.eks. 5 "Violations" i 100 000 sjekket, er ikke like alvorlig hvis det kun var 50 sjekket
 
 

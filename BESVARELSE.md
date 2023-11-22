@@ -3,7 +3,7 @@
 
 Dette dokumentet er ment som en ekstra guide til sensor.
 
-* ***Hvis jeg siterer en oppgave fra eksamens teksten er den***
+* ***Hvis jeg siterer en oppgave fra eksamens teksten den skrevet som dette***
 
 Hvis det skrevet som dette, er det skrevet av Kandidat-2020
 

@@ -104,5 +104,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         // En gauge som henter ut antall "violations"
+        // En Micrometer Meter som teller antall personer sjekket
     }
 }

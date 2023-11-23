@@ -12,18 +12,16 @@ Hvis det skrevet som dette, er det skrevet av Kandidat-2020
 
 * ***Fjerne hardkoding av S3 bucket navnet app.py koden, slik at den leser verdien "BUCKET_NAME" fra en miljøvariabel.***
 
-Her Her antok jeg at app.py koden skulle hente ut variabelen fra template yaml
+Henter BUCKET_NAME fra en enviorment variable til HelloWorldFunction i template.yaml
 
 ```python
-BUCKET_NAME = os.environ.get("BucketName")
+BUCKET_NAME = os.environ.get("BUCKET_NAME")
 ```
 
 ```yml
-Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: "kandidat-2020"
-
+ Environment:
+        Variables:
+          BUCKET_NAME: "kandidat-2020"
 ```
 
 <br>

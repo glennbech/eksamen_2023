@@ -76,7 +76,7 @@ Containerne blir pushet til AWS ECR Repet kandidat-2020
 
 Jeg valgte å la terraform filene min ligge i rot katalogen, slik vi gjorde i Terraform-App-Runner [Labben](https://github.com/glennbechdevops/terraform-app-runner#rydd-opp)
 
-Her la jeg til Kandidat nr og image i  [variables.tf](variables.tf)
+Her la jeg til Kandidat nr og image i  [variables.tf](infra/variables.tf)
 
 
 ```tf
@@ -89,7 +89,7 @@ variable "image" {
 }
 ```
 
-Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden i [main.tf](main.tf)
+Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden i [main.tf](infra/main.tf)
 
 ```tf
   instance_configuration {
@@ -109,7 +109,7 @@ Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier
 * ***Beskriv også hvilke endringer, om noen, sensor må gjøre i sin fork, GitHub Actions workflow eller kode for å få denne til å kjøre i sin fork***
 
 Oppdatert GitHub workflow for Terraform ligger [her](.github/workflows/docker.yml)
-Terraform provider og backend-konfigurasjon ligger i [provider.tf](provider.tf)
+Terraform provider og backend-konfigurasjon ligger i [provider.tf](infra/provider.tf)
 
 Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
 

@@ -5,6 +5,9 @@ on:
       - master
       - '*'
   pull_request:
+defaults:
+  run:
+    working-directory: ./infra
 jobs:
   docker_build:
     name: Push Docker image to ECR

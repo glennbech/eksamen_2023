@@ -1,6 +1,9 @@
 name: Sam Workflow
 on:
   push:
+    branches:
+      - main
+      - '*'
   pull_request:
 defaults:
   run:
@@ -20,5 +23,5 @@ jobs:
           aws-region: us-west-1
       - run: sam build --use-container
       - name: sam deploy
-        if: github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name sam-app-2020 --s3-bucket pgr301-sam-bucket  --capabilities CAPABILITY_IAM --region eu-west-1

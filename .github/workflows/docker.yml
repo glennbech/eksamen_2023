@@ -5,9 +5,6 @@ on:
       - master
       - '*'
   pull_request:
-defaults:
-  run:
-    working-directory: ./infra
 jobs:
   docker_build:
     name: Push Docker image to ECR
@@ -50,10 +47,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
+        working-directory: ./infra
         id: init
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ./infra
         id: plan
         run: terraform plan   -var="kandidat=$KANDIDAT" -var="image=$IMAGE"  -no-color
         continue-on-error: true
@@ -63,5 +62,6 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
+        working-directory: ./infra
         if: github.ref == 'refs/heads/master'
         run: terraform apply -var="kandidat=$KANDIDAT" -var="image=$IMAGE"  -auto-approve

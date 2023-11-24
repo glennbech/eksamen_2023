@@ -9,6 +9,8 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.s3rekognition.PPEClassificationResponse;
 import com.example.s3rekognition.PPEResponse;
+import io.micrometer.core.instrument.Gauge;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +28,11 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     private final AmazonS3 s3Client;
     private final AmazonRekognition rekognitionClient;
     private MeterRegistry meterRegistry;
-
+    private final PPEResponse ppeResponse;
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
-    public RekognitionController(MeterRegistry meterRegistry) {
+    public RekognitionController(MeterRegistry meterRegistry, PPEResponse ppeResponse) {
+        this.ppeResponse = ppeResponse;
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
         this.meterRegistry = meterRegistry;
@@ -104,6 +107,8 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         // En gauge som henter ut antall "violations"
-        // En Micrometer Meter som teller antall personer sjekket
+
+        // En gauge som teller antall personer sjekket
+        Gauge.builder("person_count",ppeResponse, r -> r.getResults().stream().mapToInt(PPEClassificationResponse::getPersonCount).sum()).register(meterRegistry);
     }
 }

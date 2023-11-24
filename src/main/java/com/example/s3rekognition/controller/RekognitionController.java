@@ -27,12 +27,10 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     private final AmazonS3 s3Client;
     private final AmazonRekognition rekognitionClient;
-    private MeterRegistry meterRegistry;
-    private final PPEResponse ppeResponse;
+    private final MeterRegistry meterRegistry;
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
-    public RekognitionController(MeterRegistry meterRegistry, PPEResponse ppeResponse) {
-        this.ppeResponse = ppeResponse;
+    public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
         this.meterRegistry = meterRegistry;
@@ -106,9 +104,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        // En gauge som henter ut antall "violations"
-
-        // En gauge som teller antall personer sjekket
-        Gauge.builder("person_count",ppeResponse, r -> r.getResults().stream().mapToInt(PPEClassificationResponse::getPersonCount).sum()).register(meterRegistry);
+        // En Gauge som henter ut antall "violations"
+        // En Gauge som teller antall personer sjekket
     }
 }

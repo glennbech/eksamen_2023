@@ -2,7 +2,7 @@ name: Publish Docker image to AWS ECR
 on:
   push:
     branches:
-      - main
+      - master
       - '*'
   pull_request:
 jobs:
@@ -23,7 +23,7 @@ jobs:
           docker build . -t 2020
 
       - name: Push Docker Image
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: |
           rev=$(git rev-parse --short HEAD)
           docker tag 2020 244530008913.dkr.ecr.eu-west-1.amazonaws.com/kandidat-2020:$rev
@@ -60,5 +60,5 @@ jobs:
         run: exit 1
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/master'
         run: terraform apply -var="kandidat=$KANDIDAT" -var="image=$IMAGE"  -auto-approve

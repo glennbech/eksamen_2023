@@ -108,13 +108,22 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+
         // En Gauge som henter ut antall "violations"
-        Gauge.builder("person_count",response, b -> b.values()
-                .stream()
-                .map(PPEClassificationResponse::getPersonCount)
-                .mapToInt(Integer::intValue)
-                .sum())
+        Gauge.builder("person_count",response, r -> r.values()
+                        .stream()
+                        .map(PPEClassificationResponse::getPersonCount)
+                        .mapToInt(Integer::intValue)
+                        .sum())
                 .register(meterRegistry);
-        // En Gauge som teller antall personer sjekket
+
+        // En Gauge som henter ut antall "violations"
+        Gauge.builder("violation_count",response, r -> r.values()
+                        .stream()
+                        .map(PPEClassificationResponse::isViolation)
+                        .mapToInt(iV -> iV ? 1:0)
+                        .sum())
+                .register(meterRegistry);
+
     }
 }

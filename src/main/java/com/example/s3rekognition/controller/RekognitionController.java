@@ -109,8 +109,8 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
 
-        /*
-        // En Gauge som teller antall personer sjekket
+
+/*        // En Gauge som teller antall personer sjekket
         Gauge.builder("person_count", response,
                 r -> r.values()
                         .stream()
@@ -126,8 +126,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
                         .map(PPEClassificationResponse::isViolation)
                         .mapToInt(iV -> iV ? 1:0)
                         .sum())
-                .register(meterRegistry);
-
-         */
+                .register(meterRegistry);*/
     }
 }

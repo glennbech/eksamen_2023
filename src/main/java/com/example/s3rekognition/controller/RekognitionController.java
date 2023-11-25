@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.*;
 import io.micrometer.core.instrument.MeterRegistry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -28,6 +30,8 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     private final AmazonS3 s3Client;
     private final AmazonRekognition rekognitionClient;
     private final MeterRegistry meterRegistry;
+
+    private Map<String, PPEClassificationResponse> response = new HashMap<>();
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
     public RekognitionController(MeterRegistry meterRegistry) {
@@ -105,6 +109,12 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         // En Gauge som henter ut antall "violations"
+        Gauge.builder("person_count",response, b -> b.values()
+                .stream()
+                .map(PPEClassificationResponse::getPersonCount)
+                .mapToInt(Integer::intValue)
+                .sum())
+                .register(meterRegistry);
         // En Gauge som teller antall personer sjekket
     }
 }

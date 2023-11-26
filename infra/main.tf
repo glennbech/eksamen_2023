@@ -23,7 +23,7 @@ resource "aws_apprunner_service" "service" {
 }
 
 resource "aws_iam_role" "role_for_apprunner_service" {
-  name               = "candidate-2020-role"
+  name               = "${var.kandidat}-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "policy" {
 }
 
 resource "aws_iam_policy" "policy" {
-  name        = "kandidat-2020-sin-policy"
+  name        = "${var.kandidat}-sin-policy"
   description = "Kandidat 2020 sin description"
   policy      = data.aws_iam_policy_document.policy.json
 }

@@ -30,15 +30,15 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     private final AmazonS3 s3Client;
     private final AmazonRekognition rekognitionClient;
     private final MeterRegistry meterRegistry;
-
+    List<PPEClassificationResponse> classificationResponses;
     private Map<String, PPEClassificationResponse> response = new HashMap<>();
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
-    List<PPEClassificationResponse> classificationResponses;
     public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
         this.meterRegistry = meterRegistry;
+        this.classificationResponses = new ArrayList<>();
     }
 
     /**
@@ -55,8 +55,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
         // List all objects in the S3 bucket
         ListObjectsV2Result imageList = s3Client.listObjectsV2(bucketName);
 
-        // This will hold all of our classifications
-        classificationResponses = new ArrayList<>();
 
         // This is all the images in the bucket
         List<S3ObjectSummary> images = imageList.getObjectSummaries();
@@ -81,7 +79,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             boolean violation = isViolation(result);
 
             logger.info("scanning " + image.getKey() + ", violation result " + violation);
-            // Categorize the current image as a violation or not.
+            // Categorize the current image as a violatsion or not.
             int personCount = result.getPersons().size();
             PPEClassificationResponse classification = new PPEClassificationResponse(image.getKey(), personCount, violation);
             classificationResponses.add(classification);
@@ -109,11 +107,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-
-        for (PPEClassificationResponse p : classificationResponses){
-            System.out.println(p.getPersonCount());
-        }
-
 
 /*        // En Gauge som teller antall personer sjekket
         Gauge.builder("person_count", response,

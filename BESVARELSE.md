@@ -74,8 +74,7 @@ Containerne blir pushet til AWS ECR Repet kandidat-2020
 * ***Se etter andre hard-kodede verdier og se om du kan forbedre kodekvaliteten***
 * ***Se på dokumentasjonen til aws_apprunner_service ressursen, og reduser CPU til 256, og Memory til 1024 (defaultverdiene er høyere***
 
-
-service_name og image blir hentet fra  [variables.tf](infra/variables.tf)
+``aws_iam_policy`` ``aws_iam_role`` ``image_identifier`` og ``service_name`` tar i bruk  [variables.tf](infra/variables.tf)
 
 
 ```tf
@@ -124,7 +123,7 @@ Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
 
 Jeg la til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
 
-Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations" og en metric "Number of people checked" .
+Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations" og en metric "Number of people checked" .
 
 Jeg prøvde å lage en gauge som tellte antall violations, men klare ikke få denne til å kjøre riktig. Tanker var, hvis ```PPEClassificationResponse.isViolation``` er True, skulle den legge til 1 i .register(meterRegistry). 0 Hvis False
 

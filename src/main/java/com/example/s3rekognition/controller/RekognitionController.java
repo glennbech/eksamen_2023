@@ -34,6 +34,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     private Map<String, PPEClassificationResponse> response = new HashMap<>();
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
+    List<PPEClassificationResponse> classificationResponses;
     public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
@@ -55,7 +56,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
         ListObjectsV2Result imageList = s3Client.listObjectsV2(bucketName);
 
         // This will hold all of our classifications
-        List<PPEClassificationResponse> classificationResponses = new ArrayList<>();
+        classificationResponses = new ArrayList<>();
 
         // This is all the images in the bucket
         List<S3ObjectSummary> images = imageList.getObjectSummaries();
@@ -108,6 +109,10 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+
+        for (PPEClassificationResponse p : classificationResponses){
+            System.out.println(p.getPersonCount());
+        }
 
 
 /*        // En Gauge som teller antall personer sjekket

@@ -1,5 +1,8 @@
 # Eksamen PGR301 2023
 
+## Besvarelse fra Kandidat 2020 ligger [her](BESVARELSE.md)
+
+
 ## Krav til leveransen
 
 * Eksamensoppgaven, kode og nødvendig filer er tilgjengelig i GitHub-repo: https://github.com/glennbechdevops/eksamen_2023.

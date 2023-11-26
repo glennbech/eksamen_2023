@@ -18,7 +18,7 @@ Henter BUCKET_NAME fra en enviorment variable til HelloWorldFunction i template.
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
 ```
 
-```yml
+```yaml
  Environment:
         Variables:
           BUCKET_NAME: "kandidat-2020"
@@ -74,9 +74,8 @@ Containerne blir pushet til AWS ECR Repet kandidat-2020
 * ***Se etter andre hard-kodede verdier og se om du kan forbedre kodekvaliteten***
 * ***Se på dokumentasjonen til aws_apprunner_service ressursen, og reduser CPU til 256, og Memory til 1024 (defaultverdiene er høyere***
 
-Jeg valgte å la terraform filene min ligge i rot katalogen, slik vi gjorde i Terraform-App-Runner [Labben](https://github.com/glennbechdevops/terraform-app-runner#rydd-opp)
 
-Her la jeg til Kandidat nr og image i  [variables.tf](infra/variables.tf)
+service_name og image blir hentet fra  [variables.tf](infra/variables.tf)
 
 
 ```tf
@@ -109,9 +108,11 @@ Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier
 * ***Beskriv også hvilke endringer, om noen, sensor må gjøre i sin fork, GitHub Actions workflow eller kode for å få denne til å kjøre i sin fork***
 
 Oppdatert GitHub workflow for Terraform ligger [her](.github/workflows/docker.yml)
+
 Terraform provider og backend-konfigurasjon ligger i [provider.tf](infra/provider.tf)
 
 Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
+
 
 ## Oppgave 4 Feedback
 
@@ -121,21 +122,40 @@ Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
   
 * ***Dere kan detetter selv velge hvordan dere implementerer måleinstrumenter i koden.***
 
-Jeg la til Micrometer dependency i pom.xml og opprettet en MetricsConfig [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
+Jeg la til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
 
 Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations" og en metric "Number of people checked" .
 
-Jeg prøvde å lage en gauge som tellte antall violations, men klare ikke få denne til å kjøre riktig. Gaugen skulle telle antall violations slik at et legesenter/sykehus kunne notifiserers dersom det var over 5 Violations.
+Jeg prøvde å lage en gauge som tellte antall violations, men klare ikke få denne til å kjøre riktig. Tanker var, hvis ```PPEClassificationResponse.isViolation``` er True, skulle den legge til 1 i .register(meterRegistry). 0 Hvis False
 
-"Meter" skulle telle antallet personer som blir undersøkt for eventuelle "vilations". Sammen med med Gaugen som sjekker antall "Violations" vil Meter gi et bedre innblikk i alvorlighetsgraden. F.eks. 5 "Violations" i 100 000 sjekket, er ikke like alvorlig hvis det kun var 50 sjekket
+Gaugen skulle telle antall violations slik at et legesenter/sykehus kunne notifiserers dersom det var over 5 Violations.
 
+person_count Gaugen skulle telle antall personer som har blitt undersøkt for eventuelle "vilations". Sammen med med violation_count Gaugen som sjekker antall "Violations" ville person_count gi et bedre innblikk i alvorlighetsgraden. F.eks. 5 "Violations" i 100 000 sjekket, er ikke like alvorlig hvis det kun var 50 sjekket
+
+Metric Koden ligger i [RekognitionController](src/main/java/com/example/s3rekognition/controller/RekognitionController.java)
 
 ```java
-    @Override
-    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        // En gauge som henter ut antall "violations"
-        // En Micrometer Meter som teller antall personer sjekket
-    }
+@Override
+public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+
+        // En Gauge som teller antall personer sjekket
+        Gauge.builder("person_count", response,
+        r -> r.values()
+        .stream()
+        .map(PPEClassificationResponse::getPersonCount)
+        .mapToInt(Integer::intValue)
+        .sum())
+        .register(meterRegistry);
+
+        // En Gauge som henter ut antall "violations"
+        Gauge.builder("violation_count", response,
+        r -> r.values()
+        .stream()
+        .map(PPEClassificationResponse::isViolation)
+        .mapToInt(iV -> iV ? 1:0)
+        .sum())
+        .register(meterRegistry);
+        }
 ```
 
 ![CloudWatch Dashboard](img/cloudwatchdashboard2.png)

@@ -9,8 +9,6 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.s3rekognition.PPEClassificationResponse;
 import com.example.s3rekognition.PPEResponse;
-import io.micrometer.core.instrument.Gauge;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +28,13 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     private final AmazonS3 s3Client;
     private final AmazonRekognition rekognitionClient;
     private final MeterRegistry meterRegistry;
-    private Map<String, PPEClassificationResponse> response = new HashMap<>();
-    private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
 
-    public RekognitionController(MeterRegistry meterRegistry) {
+    private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
+    
+    
+    private Map<String, PPEClassificationResponse> response = new HashMap<>();
+
+    public RekognitionController() {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
         this.meterRegistry = meterRegistry;
@@ -79,13 +80,11 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             boolean violation = isViolation(result);
 
             logger.info("scanning " + image.getKey() + ", violation result " + violation);
-            // Categorize the current image as a violatsion or not.
+            // Categorize the current image as a violation or not.
             int personCount = result.getPersons().size();
             PPEClassificationResponse classification = new PPEClassificationResponse(image.getKey(), personCount, violation);
-            response.put(bucketName, classification);
             classificationResponses.add(classification);
         }
-        // Test denne ditten
         PPEResponse ppeResponse = new PPEResponse(bucketName, classificationResponses);
         return ResponseEntity.ok(ppeResponse);
     }
@@ -109,16 +108,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-
-        Gauge.builder("person_count", response,
-                r -> r.values()
-                        .stream()
-                        .map(PPEClassificationResponse::getPersonCount)
-                        .mapToInt(Integer::intValue)
-                        .sum())
-                .register(meterRegistry);
-
-/*        // En Gauge som teller antall personer sjekket
+        /*        // En Gauge som teller antall personer sjekket
         Gauge.builder("person_count", response,
                 r -> r.values()
                         .stream()
@@ -135,5 +125,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
                         .mapToInt(iV -> iV ? 1:0)
                         .sum())
                 .register(meterRegistry);*/
+
     }
 }

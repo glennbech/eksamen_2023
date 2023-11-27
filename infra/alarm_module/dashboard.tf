@@ -59,6 +59,7 @@ resource "aws_cloudwatch_dashboard" "main" {
         "region": "eu-west-1",
         "title": "Number of images scanned"
       }
+    }
   ]
 }
 THEREBEDRAGONS

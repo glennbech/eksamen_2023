@@ -5,5 +5,5 @@ variable "alarm_email" {
 
 variable "kandidat" {
   type = string
-  #default = "candidate-2020"
+  #default = "candidate-<nr>"
 }

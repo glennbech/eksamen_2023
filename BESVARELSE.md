@@ -121,15 +121,16 @@ Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
   
 * ***Dere kan detetter selv velge hvordan dere implementerer måleinstrumenter i koden.***
 
-Jeg la til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
+Først la jeg til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
 
-Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations" og en metric "Number of people checked" .
+Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
 
-Jeg prøvde å lage en gauge som tellte antall violations, men klare ikke få denne til å kjøre riktig. Tanker var, hvis ```PPEClassificationResponse.isViolation``` er True, skulle den legge til 1 i .register(meterRegistry). 0 Hvis False
+Gaugen "violation_count" teller antall PPE violations
 
-Gaugen skulle telle antall violations slik at et legesenter/sykehus kunne notifiserers dersom det var over 5 Violations.
+Gaugen "person_count" teller antall personer som har blitt undersøkt for eventuelle "vilations".
+ Sammen med "violation_count" Gaugen, vil person_count gi et bedre innblikk i alvorlighetsgraden. F.eks. 5 "Violations" i 100 000 personer sjekket, er ikke like alvorlig hvis det kun var 50 personer som er sjekket
 
-person_count Gaugen skulle telle antall personer som har blitt undersøkt for eventuelle "vilations". Sammen med med violation_count Gaugen som sjekker antall "Violations" ville person_count gi et bedre innblikk i alvorlighetsgraden. F.eks. 5 "Violations" i 100 000 sjekket, er ikke like alvorlig hvis det kun var 50 sjekket
+Gaugen "scan_count" teller antall bilder som er blitt scannet.
 
 Metric Koden ligger i [RekognitionController](src/main/java/com/example/s3rekognition/controller/RekognitionController.java)
 
@@ -138,35 +139,53 @@ Metric Koden ligger i [RekognitionController](src/main/java/com/example/s3rekogn
 public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
 
         // En Gauge som teller antall personer sjekket
-        Gauge.builder("person_count", response,
-        r -> r.values()
-        .stream()
+        Gauge.builder("person_count", classificationResponses,
+        c -> c.stream()
         .map(PPEClassificationResponse::getPersonCount)
         .mapToInt(Integer::intValue)
         .sum())
         .register(meterRegistry);
 
-        // En Gauge som henter ut antall "violations"
-        Gauge.builder("violation_count", response,
-        r -> r.values()
-        .stream()
-        .map(PPEClassificationResponse::isViolation)
-        .mapToInt(iV -> iV ? 1:0)
-        .sum())
+        // En Gauge som teller antall violations
+        Gauge.builder("violation_count", violationCount,
+        value -> violationCount).register(meterRegistry);
+
+        // En Gauge som teller antall bilder scannet
+        Gauge.builder("scan_count", classificationResponses, List::size)
         .register(meterRegistry);
         }
 ```
 
-![CloudWatch Dashboard](img/cloudwatchdashboard2.png)
+![CloudWatch Dashboard](img/cloudwatchdashboard3.png)
 
 
 ### Del B CloudWatch Alarm og Terraform moduler
 
-Jeg opprettet en Cloudwatch [alarm](alarm_module/alarmModule.tf) med SNS subscription , tanken var at når antall violations går over 5 "PPE Violations" er det så alvorlig at vil en alarm bli utløst og PPE ansvarlig vil bli varslet.
+Jeg opprettet en Cloudwatch [alarm](alarm_module/alarmModule.tf) med SNS subscription , når antall violations går over 5 "PPE Violations".
+
+Den "praktiske" grunnen for dette valget er hvis et legesenter eller sykehus har over 5 PPE violations er det så alvorlig at en alarm bli utløst og PPE ansvarlig vil bli varslet på epost.
 
 SNS topic heter candidate-2020-alarm-topic og SNS topic subscription har id 79bc1ab1-081d-4b42-8797-b033cf84135c
 
 ![SNS Topic](img/Candidate%202020%20topic.png)
+
+***Pass samtidig på at brukere av modulen ikke må sette mange variabler når de inkluderer den i koden sin.***
+
+De som bruker koden trenger kun endre på ``alarm_email`` og ``kandidat``
+
+Men jeg også til Kommentert ut default kode, slik at den som velger å kopiere modulen kan legge inn egne verdier. Slik at innit/plan/apply går raskere
+
+```tf
+variable "alarm_email" {
+  type = string
+  #default = "yourEmail@something.com"
+}
+
+variable "kandidat" {
+  type = string
+  #default = "candidate-<nr>"
+}
+```
 
 
 

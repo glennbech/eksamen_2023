@@ -40,8 +40,25 @@ resource "aws_cloudwatch_dashboard" "main" {
         "region": "eu-west-1",
         "title": "Number of people checked"
       }
-    }
-    
+    },
+      {
+      "type": "metric",
+      "x": 10,
+      "y": 20,
+      "width": 12,
+      "height": 6,
+      "properties": {
+        "metrics": [
+          [
+            "${var.kandidat}",
+            "scan_count.value"
+          ]
+        ],
+        "period": 300,
+        "stat": "Maximum",
+        "region": "eu-west-1",
+        "title": "Number of images scanned"
+      }
   ]
 }
 THEREBEDRAGONS

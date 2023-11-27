@@ -40,6 +40,8 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     // This will hold all of our classifications
     List<PPEClassificationResponse> classificationResponses = new ArrayList<>();
 
+    int violationCount;
+
     public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
@@ -84,9 +86,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             boolean violation = isViolation(result);
 
             if (violation){
-                int i = 1;
-                Gauge.builder("violation_count", violation,
-                        value -> i).register(meterRegistry);
+                violationCount++;
             }
 
             logger.info("scanning " + image.getKey() + ", violation result " + violation);
@@ -127,6 +127,11 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
                         .sum())
                 .register(meterRegistry);
 
+        // En Gauge som teller antall violations
+        Gauge.builder("violation_count", violationCount,
+                value -> violationCount).register(meterRegistry);
+
+        // En Gauge som teller antall bilder scannet
 /*        Gauge.builder("scan_count", classificationResponses, List::size)
                 .register(meterRegistry);*/
     }

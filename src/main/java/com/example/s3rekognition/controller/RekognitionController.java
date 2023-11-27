@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.s3rekognition.PPEClassificationResponse;
 import com.example.s3rekognition.PPEResponse;
+import io.micrometer.core.instrument.Gauge;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     
     
     private Map<String, PPEClassificationResponse> response = new HashMap<>();
+    List<PPEClassificationResponse> classificationResponses;
 
     public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
@@ -55,7 +57,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
         ListObjectsV2Result imageList = s3Client.listObjectsV2(bucketName);
 
         // This will hold all of our classifications
-        List<PPEClassificationResponse> classificationResponses = new ArrayList<>();
+        classificationResponses = new ArrayList<>();
 
         // This is all the images in the bucket
         List<S3ObjectSummary> images = imageList.getObjectSummaries();
@@ -84,6 +86,13 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             int personCount = result.getPersons().size();
             PPEClassificationResponse classification = new PPEClassificationResponse(image.getKey(), personCount, violation);
             classificationResponses.add(classification);
+
+            int t = classificationResponses.stream()
+                    .map(PPEClassificationResponse::getPersonCount)
+                    .mapToInt(Integer::intValue)
+                    .sum();
+
+            logger.info("PERSON COUNT OPPE " + t);
         }
         PPEResponse ppeResponse = new PPEResponse(bucketName, classificationResponses);
         return ResponseEntity.ok(ppeResponse);
@@ -108,7 +117,24 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
-        /*        // En Gauge som teller antall personer sjekket
+
+
+        int t = classificationResponses.stream()
+                .map(PPEClassificationResponse::getPersonCount)
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        logger.info("PERSON COUNT NEDE " + t);
+
+
+        Gauge.builder("person_count", classificationResponses,
+                c -> c.stream()
+                        .map(PPEClassificationResponse::getPersonCount)
+                        .mapToInt(Integer::intValue)
+                        .sum())
+                .register(meterRegistry);
+
+/*        // En Gauge som teller antall personer sjekket
         Gauge.builder("person_count", response,
                 r -> r.values()
                         .stream()
@@ -119,11 +145,11 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
 
         // En Gauge som henter ut antall "violations"
         Gauge.builder("violation_count", response,
-                r -> r.values()
-                        .stream()
-                        .map(PPEClassificationResponse::isViolation)
-                        .mapToInt(iV -> iV ? 1:0)
-                        .sum())
+                        r -> r.values()
+                                .stream()
+                                .map(PPEClassificationResponse::isViolation)
+                                .mapToInt(iV -> iV ? 1:0)
+                                .sum())
                 .register(meterRegistry);*/
 
     }

@@ -28,7 +28,9 @@ BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
 * ***Du skal opprette en GitHub Actions-arbeidsflyt for SAM applikasjonen. For hver push til main branch, skal arbeidsflyten bygge og deploye Lambda-funksjonen.***
 * ***Som respons på en push til en annen branch en main, skal applikasjonen kun bygges***
-  
+
+Jeg tok utgangspunkt i [Workflow Filen](https://github.com/glennbechdevops/02-CD-AWS-lamda-sls#github-actions) vi brukte i CD-AWS-lamda-sls Øvingen
+
 GitHub Action fila ligger [her](.github/workflows/sam-deploy.yml)
 
 
@@ -46,6 +48,7 @@ For at sensor skal kjøre workflow fra sin egen fork må sensor lage egne Reposi
 
 ### Del B
 * ***Lag en Dockerfile som bygger et container image du kan bruke for å kjøre python koden***
+Jeg tok utgangspunkt i Dockerfilen i denne [guiden](https://www.docker.com/blog/how-to-dockerize-your-python-applications/)
 
 Dockerfilen ligger  [her](kjell/hello_world/Dockerfile)
 
@@ -53,7 +56,7 @@ Dockerfilen ligger  [her](kjell/hello_world/Dockerfile)
 ### Del A
 * ***Lag en Dockerfile for Java-appliksjonen. Du skal lage en multi stage Dockerfile som både kompilerer og kjører applikasjonen***
 
-Jeg brukte samme Dockerfil som vi brukte i [spring-docker-dockerhub](Dockerfile) øvingen
+Jeg brukte samme Dockerfil som vi brukte i [spring-docker-dockerhub](https://github.com/glennbechdevops/spring-docker-dockerhub#dockerize--en-spring-boot-applikasjon-og-push-til-docker-hub) øvingen
 
 Dockerfila ligger [her](Dockerfile)
 
@@ -69,7 +72,7 @@ Jeg tok utgangspunkt i workflow fila fra [spring-docker-dockerhub](https://githu
 
 GitHub Action Workflow fila ligger [her](.github/workflows/docker.yml)
 
-Containerne blir pushet til AWS ECR Repet kandidat-2020
+Containerne blir pushet til AWS ECR repoet kandidat-2020
 
 ## Oppgave 3- Terraform, AWS Apprunner og Infrastruktur som kode
 ### Del A
@@ -77,7 +80,7 @@ Containerne blir pushet til AWS ECR Repet kandidat-2020
 * ***Se etter andre hard-kodede verdier og se om du kan forbedre kodekvaliteten***
 * ***Se på dokumentasjonen til aws_apprunner_service ressursen, og reduser CPU til 256, og Memory til 1024 (defaultverdiene er høyere***
 
-``aws_iam_policy`` ``aws_iam_role`` ``image_identifier`` og ``service_name`` tar i bruk  [variables.tf](infra/variables.tf)
+``aws_iam_policy`` ``aws_iam_role`` ``image_identifier`` og ``service_name`` henter variabler fra  [variables.tf](infra/variables.tf)
 
 
 ```tf
@@ -126,9 +129,9 @@ Her ternger sensor også repo secrets (Som sensor allerede har gjort i oppgave 1
   
 * ***Dere kan detetter selv velge hvordan dere implementerer måleinstrumenter i koden.***
 
-Først la jeg til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
+Først la jeg til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform](https://github.com/glennbechdevops/cloudwatch_alarms_terraform) øvingen
 
-Videre tok jeg utgansgspunkt terraform koden fra [cloudwatch_alarms_terraform](src/main/java/com/example/s3rekognition/MetricsConfig.java) labben og opprettet en alarm_module mappe som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
+Videre tok jeg utgansgspunkt terraform koden fra [cloudwatch_alarms_terraform](https://github.com/glennbechdevops/cloudwatch_alarms_terraform) labben og opprettet en alarm_module mappe som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
 
 Gaugen "violation_count" teller antall PPE violations
 

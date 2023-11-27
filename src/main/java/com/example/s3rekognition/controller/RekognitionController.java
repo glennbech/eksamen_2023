@@ -10,18 +10,20 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.s3rekognition.PPEClassificationResponse;
 import com.example.s3rekognition.PPEResponse;
 import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 
 @RestController
@@ -81,6 +83,12 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             // If any person on an image lacks PPE on the face, it's a violation of regulations
             boolean violation = isViolation(result);
 
+            if (violation){
+                int i = 1;
+                Gauge.builder("violation_count", violation,
+                        value -> i).register(meterRegistry);
+            }
+
             logger.info("scanning " + image.getKey() + ", violation result " + violation);
             // Categorize the current image as a violation or not.
             int personCount = result.getPersons().size();
@@ -119,8 +127,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
                         .sum())
                 .register(meterRegistry);
 
-
-        // En Gauge som henter ut antall "violations"
-
+/*        Gauge.builder("scan_count", classificationResponses, List::size)
+                .register(meterRegistry);*/
     }
 }

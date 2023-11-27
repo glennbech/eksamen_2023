@@ -34,7 +34,8 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     
     
     private Map<String, PPEClassificationResponse> response = new HashMap<>();
-    List<PPEClassificationResponse> classificationResponses;
+    // This will hold all of our classifications
+    List<PPEClassificationResponse> classificationResponses = new ArrayList<>();
 
     public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
@@ -56,8 +57,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
         // List all objects in the S3 bucket
         ListObjectsV2Result imageList = s3Client.listObjectsV2(bucketName);
 
-        // This will hold all of our classifications
-        classificationResponses = new ArrayList<>();
 
         // This is all the images in the bucket
         List<S3ObjectSummary> images = imageList.getObjectSummaries();

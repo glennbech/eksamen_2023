@@ -30,7 +30,6 @@ BUCKET_NAME = os.environ.get("BUCKET_NAME")
 * ***Som respons på en push til en annen branch en main, skal applikasjonen kun bygges***
   
 GitHub Action fila ligger [her](.github/workflows/sam-deploy.yml)
-Bucket ble opprettet under navnet kandidat-2020
 
 
 * ***Forklar hva sensor må gjøre for å få GitHub Actions workflow til å kjøre i sin egen GitHub-konto***
@@ -54,6 +53,8 @@ Dockerfilen ligger  [her](kjell/hello_world/Dockerfile)
 ### Del A
 * ***Lag en Dockerfile for Java-appliksjonen. Du skal lage en multi stage Dockerfile som både kompilerer og kjører applikasjonen***
 
+Jeg brukte samme Dockerfil som vi brukte i [spring-docker-dockerhub](Dockerfile) øvingen
+
 Dockerfila ligger [her](Dockerfile)
 
 
@@ -63,6 +64,8 @@ Dockerfila ligger [her](Dockerfile)
 * ***Du må selv lage et ECR repository i AWS miljøet, du trenger ikke automatisere prosessen med å lage dette.***
 * ***Container image skal ha en tag som er lik commit-hash i Git, for eksempel: glenn-ppe:b2572585e.***
 * ***Den siste versjonen av container image som blir pushet til ECR, skal i tillegg få en tag "latest"***
+
+Jeg tok utgangspunkt i workflow fila fra [spring-docker-dockerhub](https://github.com/glennbechdevops/spring-docker-dockerhub) øvingen.
 
 GitHub Action Workflow fila ligger [her](.github/workflows/docker.yml)
 
@@ -87,7 +90,7 @@ variable "image" {
 }
 ```
 
-Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden i [main.tf](infra/main.tf)
+Jeg prøvde å følge dokmunetasjonen til CPU og Memory i [dokumentasjonen](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apprunner_service#instance-configuration) til aws_apprunner_service, men fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden slik jeg ville ha gjort det i [main.tf](infra/main.tf)
 
 ```tf
   instance_configuration {
@@ -106,11 +109,13 @@ Jeg fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier
 * ***Du må lege til Terraform provider og backend-konfigurasjon. Dette har Kjell glemt. Du kan bruke samme S3 bucket som vi har brukt til det formålet i øvingene***
 * ***Beskriv også hvilke endringer, om noen, sensor må gjøre i sin fork, GitHub Actions workflow eller kode for å få denne til å kjøre i sin fork***
 
+Jeg tok utgangspunkt i Workflow og terraform koden i [Terraform-app-runner](https://github.com/glennbechdevops/terraform-app-runnerl) øvingen
+
 Oppdatert GitHub workflow for Terraform ligger [her](.github/workflows/docker.yml)
 
 Terraform provider og backend-konfigurasjon ligger i [provider.tf](infra/provider.tf)
 
-Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
+Her ternger sensor også repo secrets (Som sensor allerede har gjort i oppgave 1)
 
 
 ## Oppgave 4 Feedback
@@ -123,7 +128,7 @@ Her ternger man også repo secrets (Som sensor allerede har gjort i oppgave 1)
 
 Først la jeg til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform labben](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
 
-Videre opprettet jeg alarm_module mappen som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
+Videre tok jeg utgansgspunkt terraform koden fra [cloudwatch_alarms_terraform](src/main/java/com/example/s3rekognition/MetricsConfig.java) labben og opprettet en alarm_module mappe som inneholder Terraform kode som [oppretter](infra/alarm_module/dashboard.tf) et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
 
 Gaugen "violation_count" teller antall PPE violations
 
@@ -131,6 +136,10 @@ Gaugen "person_count" teller antall personer som har blitt undersøkt for eventu
  Sammen med "violation_count" Gaugen, vil person_count gi et bedre innblikk i alvorlighetsgraden. F.eks. 5 "Violations" i 100 000 personer sjekket, er ikke like alvorlig hvis det kun var 50 personer som er sjekket
 
 Gaugen "scan_count" teller antall bilder som er blitt scannet.
+
+Den "praktiske" grunnen for dette valget er at personen som overvåker metrikken kan lage en raport som sier noe slikt:
+
+ ``Ut i fra xxx bilder som ble scannet, ble xxx personer sjekket for PPE. Av de xxx personene hadde xxx personer ppp violation``
 
 Metric Koden ligger i [RekognitionController](src/main/java/com/example/s3rekognition/controller/RekognitionController.java)
 
@@ -161,7 +170,7 @@ public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
 
 ### Del B CloudWatch Alarm og Terraform moduler
 
-Jeg opprettet en Cloudwatch [alarm](alarm_module/alarmModule.tf) med SNS subscription , når antall violations går over 5 "PPE Violations".
+Jeg utgansgspunkt i aws_cloudwatch_metric_alarm ressursen i [aws_cloudwatch_metric_alarm](https://github.com/glennbechdevops/cloudwatch_alarms_terraform) og lagde en Cloudwatch [alarm](infra/alarm_module/alarmModule.tf) med SNS subscription. SNS sender epost når antall violations går over 5 "PPE Violations".
 
 Den "praktiske" grunnen for dette valget er hvis et legesenter eller sykehus har over 5 PPE violations er det så alvorlig at en alarm bli utløst og PPE ansvarlig vil bli varslet på epost.
 

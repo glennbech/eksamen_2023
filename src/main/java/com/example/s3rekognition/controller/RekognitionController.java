@@ -34,7 +34,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     
     private Map<String, PPEClassificationResponse> response = new HashMap<>();
 
-    public RekognitionController() {
+    public RekognitionController(MeterRegistry meterRegistry) {
         this.s3Client = AmazonS3ClientBuilder.standard().build();
         this.rekognitionClient = AmazonRekognitionClientBuilder.standard().build();
         this.meterRegistry = meterRegistry;

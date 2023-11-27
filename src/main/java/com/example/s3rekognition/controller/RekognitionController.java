@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 
 @RestController
@@ -86,12 +87,16 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             PPEClassificationResponse classification = new PPEClassificationResponse(image.getKey(), personCount, violation);
             classificationResponses.add(classification);
 
-            int t = classificationResponses.stream()
+            int p = classificationResponses.stream()
                     .map(PPEClassificationResponse::getPersonCount)
                     .mapToInt(Integer::intValue)
                     .sum();
 
-            logger.info("PERSON COUNT OPPE " + t);
+            Stream<Boolean> v = classificationResponses.stream()
+                    .map(PPEClassificationResponse::isViolation);
+
+            logger.info("Is Viloation " + v);
+            logger.info("PERSON COUNT OPPE " + p);
         }
         PPEResponse ppeResponse = new PPEResponse(bucketName, classificationResponses);
         return ResponseEntity.ok(ppeResponse);

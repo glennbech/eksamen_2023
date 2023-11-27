@@ -86,17 +86,6 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             int personCount = result.getPersons().size();
             PPEClassificationResponse classification = new PPEClassificationResponse(image.getKey(), personCount, violation);
             classificationResponses.add(classification);
-
-            int p = classificationResponses.stream()
-                    .map(PPEClassificationResponse::getPersonCount)
-                    .mapToInt(Integer::intValue)
-                    .sum();
-
-            Stream<Boolean> v = classificationResponses.stream()
-                    .map(PPEClassificationResponse::isViolation);
-
-            logger.info("Is Viloation " + v);
-            logger.info("PERSON COUNT OPPE " + p);
         }
         PPEResponse ppeResponse = new PPEResponse(bucketName, classificationResponses);
         return ResponseEntity.ok(ppeResponse);
@@ -122,15 +111,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
 
-
-        int t = classificationResponses.stream()
-                .map(PPEClassificationResponse::getPersonCount)
-                .mapToInt(Integer::intValue)
-                .sum();
-
-        logger.info("PERSON COUNT NEDE " + t);
-
-
+        // En Gauge som teller antall personer sjekket
         Gauge.builder("person_count", classificationResponses,
                 c -> c.stream()
                         .map(PPEClassificationResponse::getPersonCount)
@@ -138,23 +119,8 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
                         .sum())
                 .register(meterRegistry);
 
-/*        // En Gauge som teller antall personer sjekket
-        Gauge.builder("person_count", response,
-                r -> r.values()
-                        .stream()
-                        .map(PPEClassificationResponse::getPersonCount)
-                        .mapToInt(Integer::intValue)
-                        .sum())
-                .register(meterRegistry);
 
         // En Gauge som henter ut antall "violations"
-        Gauge.builder("violation_count", response,
-                        r -> r.values()
-                                .stream()
-                                .map(PPEClassificationResponse::isViolation)
-                                .mapToInt(iV -> iV ? 1:0)
-                                .sum())
-                .register(meterRegistry);*/
 
     }
 }

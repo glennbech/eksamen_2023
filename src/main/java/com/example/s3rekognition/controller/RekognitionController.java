@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 
@@ -34,9 +32,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
     private final MeterRegistry meterRegistry;
 
     private static final Logger logger = Logger.getLogger(RekognitionController.class.getName());
-    
-    
-    private Map<String, PPEClassificationResponse> response = new HashMap<>();
+
     // This will hold all of our classifications
     List<PPEClassificationResponse> classificationResponses = new ArrayList<>();
 
@@ -85,6 +81,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
             // If any person on an image lacks PPE on the face, it's a violation of regulations
             boolean violation = isViolation(result);
 
+            // If there is a violation, violationCount is incremented
             if (violation){
                 violationCount++;
             }
@@ -132,7 +129,7 @@ public class RekognitionController implements ApplicationListener<ApplicationRea
                 value -> violationCount).register(meterRegistry);
 
         // En Gauge som teller antall bilder scannet
-/*        Gauge.builder("scan_count", classificationResponses, List::size)
-                .register(meterRegistry);*/
+        Gauge.builder("scan_count", classificationResponses, List::size)
+                .register(meterRegistry);
     }
 }

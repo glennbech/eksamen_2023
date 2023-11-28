@@ -37,6 +37,8 @@ Min GitHub Action fil ligger [her](.github/workflows/sam-deploy.yml)
 
 * ***Forklar hva sensor må gjøre for å få GitHub Actions workflow til å kjøre i sin egen GitHub-konto***
 
+Sensor må endre ``---stack-name`` i workflow fila til noe unikt
+
 For at sensor skal kjøre workflow fra sin egen fork må sensor lage egne Repository Secrets
 1. Gå in på AWS IAM
 2. Trykk Create Access Keys

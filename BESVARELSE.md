@@ -12,7 +12,7 @@ Hvis det skrevet som dette, er det skrevet av Kandidat-2020
 
 * ***Fjerne hardkoding av S3 bucket navnet app.py koden, slik at den leser verdien "BUCKET_NAME" fra en miljøvariabel.***
 
-Henter BUCKET_NAME fra en enviorment variable til HelloWorldFunction i template.yaml
+Henter BUCKET_NAME fra en enviorment variable i template.yaml
 
 ```python
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
@@ -28,6 +28,7 @@ BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
 * ***Du skal opprette en GitHub Actions-arbeidsflyt for SAM applikasjonen. For hver push til main branch, skal arbeidsflyten bygge og deploye Lambda-funksjonen.***
 * ***Som respons på en push til en annen branch en main, skal applikasjonen kun bygges***
+
 
 Jeg tok utgangspunkt i workflow filen vi brukte i [CD-AWS-lamda-sls øvingen](https://github.com/glennbechdevops/02-CD-AWS-lamda-sls#github-actions)
 
@@ -48,7 +49,8 @@ For at sensor skal kjøre workflow fra sin egen fork må sensor lage egne Reposi
 
 ### Del B
 * ***Lag en Dockerfile som bygger et container image du kan bruke for å kjøre python koden***
-Jeg tok utgangspunkt i Dockerfilen i denne [guiden](https://www.docker.com/blog/how-to-dockerize-your-python-applications/)
+
+Jeg tok utgangspunkt fra Dockerfilen i denne [guiden](https://www.docker.com/blog/how-to-dockerize-your-python-applications/)
 
 Min Dockerfile ligger [her](kjell/hello_world/Dockerfile)
 
@@ -68,7 +70,7 @@ Min Dockerfile ligger [her](Dockerfile)
 * ***Container image skal ha en tag som er lik commit-hash i Git, for eksempel: glenn-ppe:b2572585e.***
 * ***Den siste versjonen av container image som blir pushet til ECR, skal i tillegg få en tag "latest"***
 
-Jeg tok utgangspunkt i workflow fila fra [spring-docker-dockerhub øvingen](https://github.com/glennbechdevops/spring-docker-dockerhub)
+Jeg tok utgangspunkt i workflow fila fra [spring-docker-dockerhub øvingen](https://github.com/glennbechdevops/spring-docker-dockerhub#f%C3%A5-github-actions-til-%C3%A5-bygge--pushe-et-nytt-image-hver-gang-noen-lager-en-ny-commit-p%C3%A5-main-branch)
 
 Min GitHub Action Workflow fil ligger [her](.github/workflows/docker.yml)
 
@@ -93,7 +95,7 @@ variable "image" {
 }
 ```
 
-Jeg prøvde å følge dokmunetasjonen til CPU og Memory i [dokumentasjonen](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apprunner_service#instance-configuration) til aws_apprunner_service, men fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden slik jeg ville ha gjort det i min [main.tf fil](infra/main.tf)
+Jeg prøvde å følge dokmunetasjonen til CPU og Memory i [dokumentasjonen](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/apprunner_service#instance-configuration) til aws_apprunner_service, men fikk rare feilmeldinger når jeg prøvde å sette egne cpu og memory verdier, jeg kar kommentert ut koden slik jeg ville ha gjort det i min main.tf [fil](infra/main.tf)
 
 ```tf
   instance_configuration {
@@ -112,13 +114,13 @@ Jeg prøvde å følge dokmunetasjonen til CPU og Memory i [dokumentasjonen](http
 * ***Du må lege til Terraform provider og backend-konfigurasjon. Dette har Kjell glemt. Du kan bruke samme S3 bucket som vi har brukt til det formålet i øvingene***
 * ***Beskriv også hvilke endringer, om noen, sensor må gjøre i sin fork, GitHub Actions workflow eller kode for å få denne til å kjøre i sin fork***
 
-Jeg tok utgangspunkt i Workflow og terraform koden i [Terraform-app-runner øvingen](https://github.com/glennbechdevops/terraform-app-runnerl)
+Jeg tok utgangspunkt i Workflow og terraform koden i [Terraform-app-runner øvingen](https://github.com/glennbechdevops/terraform-app-runner)
 
 Min oppdaterte GitHub workflow fil for Terraform ligger [her](.github/workflows/docker.yml)
 
 Min terraform provider og backend-konfigurasjon ligger i [provider.tf](infra/provider.tf)
 
-Her ternger sensor også repo secrets (Som sensor allerede har gjort i oppgave 1)
+Her trenger sensor GitHub Repository Secrets for å kjøre GitHub Action Workflow filen, men det har Sensor allerede lagt til fra Oppgave 1A
 
 
 ## Oppgave 4 Feedback
@@ -129,9 +131,9 @@ Her ternger sensor også repo secrets (Som sensor allerede har gjort i oppgave 1
   
 * ***Dere kan detetter selv velge hvordan dere implementerer måleinstrumenter i koden.***
 
-Først la jeg til Micrometer dependency i pom.xml og opprettet en [MetricsConfig](src/main/java/com/example/s3rekognition/MetricsConfig.java) som vi brukte i [cloudwatch_alarms_terraform øvingen](https://github.com/glennbechdevops/cloudwatch_alarms_terraform)
+Jeg tok utgangspunkt fra [cloudwatch_alarms_terraform øvingen](https://github.com/glennbechdevops/cloudwatch_alarms_terraform) og la jeg til Micrometer dependency i pom.xml og opprettet en MetricsConfig fil.
 
-Videre tok jeg utgansgspunkt terraform koden fra [cloudwatch_alarms_terraform øvingen](https://github.com/glennbechdevops/cloudwatch_alarms_terraform) og opprettet en alarm_module mappe som inneholder Terraform kode som oppretter et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
+Videre opprettet jeg en alarm_module mappe som inneholder Terraform kode som oppretter et CloudWatch DashBoard under navnet candidate-2020, en metric "Number of violations", en metric "Number of people checked" og en metric "Number of images scanned" .
 
 Min dashboardkode ligger [her](infra/alarm_module/dashboard.tf)
 
@@ -146,7 +148,7 @@ Den "praktiske" grunnen for dette valget er at personen som overvåker metrikken
 
  ``Ut i fra xxx bilder som ble scannet, ble xxx personer sjekket for PPE. Av de xxx personene hadde xxx personer ppp violation``
 
-Metric Koden ligger i [RekognitionController](src/main/java/com/example/s3rekognition/controller/RekognitionController.java)
+Min Metric kode ligger i RekognitionController [her](src/main/java/com/example/s3rekognition/controller/RekognitionController.java) og MetricsConfig filen min ligger [her](src/main/java/com/example/s3rekognition/MetricsConfig.java)
 
 ```java
 @Override
@@ -175,8 +177,7 @@ public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
 
 ### Del B CloudWatch Alarm og Terraform moduler
 
-Jeg utgansgspunkt i aws_cloudwatch_metric_alarm ressursen i [aws_cloudwatch_metric_alarm øvingen](https://github.com/glennbechdevops/cloudwatch_alarms_terraform) og lagde en Cloudwatch alarm med SNS subscription. SNS sender epost når antall violations går over 5 "PPE Violations".
-
+Jeg tok utgansgspunkt i aws_cloudwatch_metric_alarm ressursen i [aws_cloudwatch_metric_alarm øvingen](https://github.com/glennbechdevops/cloudwatch_alarms_terraform#lag-en-ny-mappe-under-infra-som-henter-alarm_module) og lagde en Cloudwatch alarm med SNS subscription. SNS sender epost når antall violations går over 5 "PPE Violations".
 
 Den "praktiske" grunnen for dette valget er hvis et legesenter eller sykehus har over 5 PPE violations er det så alvorlig at en alarm bli utløst og PPE ansvarlig vil bli varslet på epost.
 

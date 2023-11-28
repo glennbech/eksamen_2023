@@ -37,7 +37,7 @@ Min GitHub Action fil ligger [her](.github/workflows/sam-deploy.yml)
 
 * ***Forklar hva sensor må gjøre for å få GitHub Actions workflow til å kjøre i sin egen GitHub-konto***
 
-Sensor må endre ``---stack-name`` i workflow fila til noe unikt
+Sensor må endre ``--stack-name`` i workflow fila til noe unikt
 
 For at sensor skal kjøre workflow fra sin egen fork må sensor lage egne Repository Secrets
 1. Gå in på AWS IAM
@@ -123,6 +123,10 @@ Min oppdaterte GitHub workflow fil for Terraform ligger [her](.github/workflows/
 Min terraform provider og backend-konfigurasjon ligger i [provider.tf](infra/provider.tf)
 
 Her trenger sensor GitHub Repository Secrets for å kjøre GitHub Action Workflow filen, men det har Sensor allerede lagt til fra Oppgave 1A
+
+Sensor må også endre ``KANDIDAT`` variabelen og bytte ut "Kandidat-2020" med eget ECR repo i GitHub Action Fila.
+
+I tillegg må sensor endre "key" i profider.tf filen til noe unikt.
 
 
 ## Oppgave 4 Feedback

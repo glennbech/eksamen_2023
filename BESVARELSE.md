@@ -187,7 +187,7 @@ Alarm koden min ligger [her](infra/alarm_module/alarmModule.tf)
 
 ![SNS Topic](img/Candidate%202020%20topic.png)
 
-***Pass samtidig på at brukere av modulen ikke må sette mange variabler når de inkluderer den i koden sin.***
+* ***Pass samtidig på at brukere av modulen ikke må sette mange variabler når de inkluderer den i koden sin.***
 
 De som bruker koden trenger kun endre på ``alarm_email`` og ``kandidat``
 
@@ -232,7 +232,7 @@ Si man har 5 utviklere som skal utbedre backend koden for handlekurv og ordre pr
 #### 1. Scrum Scrum/Smidig Metodikk:
 * ***Beskriv kort, hovedtrekkene i Scrum metodikk og dens tilnærming til programvareutvikling.***
 
-Scrum er et rammeverk som hjelper utviklere å utvikle, levere og opprettholde et utviklings prosjekt. Hovedtrekkene til Scrum er å bryte ned store prosjekt ned i mindre oppgaver, disse oppgavene settes i det som kalles en «Product Backlog».
+Scrum er et rammeverk som hjelper utviklere å planlegge, utvikle, levere og opprettholde et programmerings/utviklings prosjekt. Hovedtrekkene til Scrum er å bryte ned store prosjekt ned i mindre oppgaver, disse oppgavene settes i det som kalles en «Product Backlog».
 
 Kjernen i Scrum er «Scrum Sprints». I en sprint, velger utviklerne (eller scrum master) hvilke backlog items som skal med i sprint backlogen. Lengden på en Sprint varierer, men er ofte 1 uke opptil 1 måned. En sprint består av…
 * Sprint Planning 
@@ -257,7 +257,7 @@ Bildet er hentet fra [Wrike](https://www.wrike.com/scrum-guide/scrum-sprints/#wh
 
 **Lett å jobbe i lag**
 
-Med en god sammensatt backlog er det lett å jobbe i lag, selv om man ikke kjenner hverandre godt. Og siden SCRUM er et rammeverk som blir brukt i hele verden, gjør det at selv nye ansatte i en bedrift lett kan tilpasse seg i et allerede veletablert utviklingsteam.
+Med en god sammensatt backlog er det lett å jobbe i lag, selv om man ikke kjenner hverandre godt. Og siden SCRUM er et rammeverk som blir brukt i hele verden, gjør det at selv nye ansatte i en bedrift lett kan tilpasse seg i et allerede veletablert scrum-team.
 
 **Fremmer kommunikasjon**
 
@@ -282,12 +282,12 @@ Sprint perioden har mange møter, disse kan være tidskrevende og tar tid fra se
 #### 2. DevOps Metodikk
 * ***Forklar grunnleggende prinsipper og praksiser i DevOps, spesielt med tanke på integrasjonen av utvikling og drift***
 
-DevOps en kombinasjon mellom utvikling (Dev) og IT operasjoner. Og noen grunnleggende prinsipper og praksiser inkluderer…
+DevOps er en kombinasjon mellom utvikling (Dev) og IT operasjoner. Og noen grunnleggende prinsipper og praksiser inkluderer…
 
 
 ***Samarbeid og Kommunikasjon***
 
-Det er viktig med godt samarbeid i DevOps, ofte så jobber backend, frontend, tester og sikkerhets eksperter i lag, og da er det viktig at man har god kommunikasjon.
+Det er viktig med godt samarbeid i DevOps, ofte så jobber backend, frontend, testere og sikkerhets eksperter i lag, og da er det viktig at man har god kommunikasjon.
 
 
 ***CI***
@@ -302,12 +302,12 @@ Automasjon er en sentral del av DevOps. Ved å bruke GitHub Action workflows, ka
 
 ***Feedback***
 
-Ved å bruke Alarmer og monitorering, som f.eks. Cloudwatch alarms og Metrics, kan vi raskt tilbakemelding om noe er galt. Dette kan hindre at hele systemer blir tatt ned, som kan spare tid og penger.
+Ved å bruke Alarmer og monitorering, som f.eks. Cloudwatch alarms og Metrics, får vi raskt tilbakemelding om noe er galt. Dette kan hindre at hele systemer blir tatt ned, som kan spare tid og penger.
 
 
 ***Konstant tilbakemeldinger, forbedringer og «blameless postmortems»***
 
-I DevOps tar vi i bruk verktøy for å automatisere mye av arbeidet, dette gjør at man konstant får tilbakemeldinger og konstant forbedrer seg. Men kan også hende man, at man introduserer uforutsigbare feiler, som gjør at servere/miljøer går ned. I stedet for å fokusere på hvem som gjorde feilen, kan man heller lære sammen hva som gjorde at feilen skjedde, vi tar altså en felles «blameless portmortem».
+I DevOps tar vi i bruk verktøy for å automatisere mye av arbeidet, dette gjør at man konstant får tilbakemeldinger og konstant forbedrer seg. Men kan også hende man, at man introduserer uforutsigbare feiler, som gjør at servere/miljøer går ned. I stedet for å fokusere på hvem som gjorde feilen, kan man heller lære sammen hva som gjorde at feilen skjedde, vi tar altså en felles «blameless portmortem». I DevOps er vi avhengige av å lære av egne og (andres) feil for å konstant forbedre oss!
 
 
 * ***Analyser hvordan DevOps kan påvirke kvaliteten og leveransetempoet i programvareutvikling***
@@ -321,7 +321,7 @@ Ved å bruke DevOps får vi en mye bedre flyt i utviklingsprosessen, ved å bruk
 
 *Effektiv*
 
-Ved å ta i bruk DevOps prinsipper, kan man effektivt jobbe individuelt på samme kodebase. Man får rask feedback med automatiserte tester og peer reviews. Og kan ha god kontroll på prosjektet sitt i form av logger, alarmer og monitorering.
+Ved å ta i bruk DevOps prinsipper, kan man effektivt jobbe individuelt og sammen (parallelt) på felles kodebase. Man får rask feedback med automatiserte tester og peer reviews. Og kan ha god kontroll på prosjektet sitt i form av logger, alarmer og monitorering.
 
 
 *Sparer Tid*
@@ -330,17 +330,17 @@ Ved å automatisere, testing, bygging og deploying, sparer man mye tid. Dette er
 
 *Fremmer god kommunikasjon*
 
-Ved å ta i bruk DevOps prinsipper er man avhengig av tilbakemelding fra hverandre, om det er fra peer reveiws eller at man lærer av feil i lag. Å snakke og å lære fra hverandre, gjør at vi «Team spirit» som er med på å øke effektiviteten.
+Ved å ta i bruk DevOps prinsipper er man avhengig av tilbakemelding fra hverandre, om det er fra peer reveiws eller at man lærer av feil i lag. Å snakke og å lære fra hverandre gjør at vi får et sammkjørt DevOps Team. God «Team Spirit» er med på å øke effektiviteten.
 
 **Svakheter**
 
-*Mye å sette seg inn i*
+*Kan være mye å sette seg inn i for noen*
 
 I DevOps finnes det mange forskjellige rammeverk, og verktøy som kan brukes. Alt fra Docker, til Cloudwatch Metrics til GitHub Action workflows. Alle disse er sentrale i DevOps og er viktig at de ansatte har et forhold til. Disse verktøyene tar tid å lære seg og kan være tidskrevende å lære opp nye ansatte til dette.
 
 *Viktig å ha god Kommunikasjon*
 
-Ikke en direkte svakhet, men viktig punkt å nevne. Et effektivt DevOps lag er avhengig av god kommunikasjon. Man er avhengig av peer reviews og å lære av egne og andres feil i lag som er basert på god kommunikasjon. Har man dårlig kommunikasjon i et DevOps lag blir det vanskelig å forbedre seg.
+Ikke en direkte svakhet, men viktig punkt å nevne. Et effektivt DevOps lag er avhengig av god kommunikasjon. Man er avhengig av peer reviews og å lære av egne og andres feil. Dette krever god kommunikasjon. Har man dårlig kommunikasjon i et DevOps lag blir det vanskelig å forbedre seg.
 
 
 #### 3.Sammenligning og Kontrast:
@@ -348,20 +348,20 @@ Ikke en direkte svakhet, men viktig punkt å nevne. Et effektivt DevOps lag er a
 
 *Programvarekvalitet*
 
-Både SCRUM og DevOps fokuserer på programvarekvalitet, SCRUM går hele prossesen litt saktere en i DevOps, siden man bruker tid på utviklingen, som scrum planning, reviews og daily scrums. I sprint uken er det god tid
-til å burdere eget og andres arbeid som kan være med på å forbedre programvarevaliteten.
+Både SCRUM og DevOps fokuserer på programvarekvalitet, i SCRUM går hele prossesen litt saktere enn i DevOps, siden man bruker tid på planleggingen av selve Scrum prossessen, som tildeling av roller, scrum planning, reviews og daily scrums. I sprint uken er det god tid
+til å vurdere eget og andres arbeid som kan være med på å forbedre programvarevaliteten.
 I DevOps er det mye automasjon, så man oppdager feil tidlig, så det er ikke nødvendigvis dårligere kodekvalitet i DevOps, men man bruker kanske ikke like mye tid på det som i Scrum.
 
 *Leveransetempo*
 
-I DevOps er automasjon et kjerneelement, alt fra testing til deploying gjøres ofte automatisk, som øker leveransetempoet. I Scrum har ikke like stort fokus på automasjon, men mer om selve arbeidsprosessen, som kan gjøre at leveransetempoet blir litt saktere enn i devops
+I DevOps er automasjon et kjerneelement, alt fra testing til deploying gjøres ofte automatisk, som øker leveransetempoet. Scrum har ikke like stort fokus på automasjon, men mer om selve arbeidsprosessen, som kan gjøre at leveransetempoet blir litt saktere enn i DevOps
 
 * ***Diskuter hvilke aspekter ved hver metodikk som kan være mer fordelaktige i bestemte utviklingssituasjoner***
 
 Begge fokuserer på kvalitet i koden og prossesen runt utviklingen, men jeg føler det er litt "Give and Take" når det kommer til SCRUM og DevOps. DevOps er man avhengig av å lære seg verktøy og rammeverk for 
-å få det meste ut av automasjonen, og dette kan være vanskelig hvis man f.eks alle er helt ny i et utviklings team. Scrum derimot er man kun avhengig av det teoretiske, og kan være lettere for et nytt utviklings lag 
+å få det meste ut av automasjonen, og dette kan være vanskelig hvis man f.eks alle er helt ny i et utviklings team. Scrum derimot er man mer avhengig av det teoretiske, og kan være lettere for et nytt utviklings lag 
 å sett i gang med.
-Kort forklart DevOps, hvis man har erfaring og jobber godt i lag fra før av. Scrum hvis man ikke har like god kjenskap til hverandre fra før av.
+Kort forklart så ville jeg valgt DevOps, hvis man er erfaren i DevOps og jobber godt i lag fra før av. Scrum hvis man ikke har like god kjenskap til hverandre fra før av.
 
 ### Del C Det Andre Prinsippet - Feedback
 * ***Tenk deg at du har implementert en ny funksjonalitet i en applikasjon du jobber med. Beskriv hvordan du vil etablere og bruke teknikker vi har lært fra "feedback" for å sikre at den nye funksjonaliteten møter brukernes behov. Behovene Drøft hvordan feedback bidrar til kontinuerlig forbedring og hvordan de kan integreres i ulike stadier av utviklingslivssyklusen***
@@ -381,13 +381,24 @@ Vi kan fortsette litt med eksempelet jeg nevnte over, handlekurv og ordre proses
 Et godt startpunkt er å legge til tester og automatisere disse, slik at vi kjører tester når vi gjør en push til branchen vår, dette gjør at vi raskt tilbakemelding om noe er galt og unngår at vi pusher dårlig kode til main branchen som kan ødelegge for brukeren.
 Videre kan man legge til logging, slik at man lett kan finne hvor feilmeldinger oppstår, og hva som forsaket feilen, den beste praksisen er å kjøre en såkalt «Blameless Postmortem», vi ønsker ikke å peke ut personen som tok ned serveren, men heller lære hvordan vi kan unngå feilen.
 
-Ved å lære av feilene våre kan vi legge til alarm systemer, som f.eks. Cloudwatch alarms. Hvis vi f.eks. fant ut at serveren går ned når x antall brukere holder på å betale, så kan vi lage en Cloudwatch alarm som notifiserer oss når vi når f.eks.
-75% kapasitet, slik at vi kan aktivere flere servere og unngå at vi taper brukere.
+Ved å lære av feilene våre kan vi legge til alarm systemer, som f.eks. Cloudwatch alarms. Hvis vi f.eks. fant ut at serveren går ned når x antall brukere holder på å betale, så kan vi lage en Cloudwatch alarm som notifiserer oss når vi når vi f.eks.
+ når 75% kapasitet, slik at vi kan aktivere flere servere og unngå at vi taper brukere.
 
-Når man har et kjørende prosjekt kan det være lurt å bruke metrikk, som f.eks. Micrometer biblioteket. I dette eksempelet kan det være interessant å legge til metrikk på hvor mange som handler på ulike tidspunkt av døgnet, eller hvor lang tid det tar før folk legger ting i handlekurven før de trykker checkout.
+Når man har et kjørende prosjekt kan det være lurt å bruke metrikk, som f.eks. Micrometer biblioteket. I dette eksempelet kan det være interessant å legge til metrikk på hvor mange som handler på ulike tidspunkt av døgnet, eller hvor lang tid det tar før folk legger artikler i handlekurven før de trykker checkout.
 Med metrikk kan man få et annet synt på prosjektet man har utviklet, og direkte videreutvikle basert på tilbakemelding fra metrikkene, for å forbedre bruker vennligheten.
 
 Alarmer, testing, logging og metrikk er alle med på å kontinuerlig forbedre utviklings prosessen, gjennom læring av egne feil eller uforutsigbare bruker vaner.
+
+*Kilder*
+
+*Forelesninger og Slides*
+
+*https://www.wrike.com/scrum-guide/*
+
+*https://www.atlassian.com/devops/what-is-devops*
+
+
+
 
 
 
